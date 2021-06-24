@@ -25,7 +25,7 @@ function getMessage(coin){
 		
 		if(coin == 'osmosis'){
 			let cosmosInfo = getOsmosisInfo()
-			msg = `⚛️ <b>Osmosis (osmo)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
+			msg = `🧪 <b>Osmosis (osmo)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 			if( wdate <  cdate) {
 				maxTokens = (cosmosInfo.max_tokens/ 1000000).toFixed(0)
 				stakedTokens = (cosmosInfo.bonded_tokens / 1000000 ).toFixed(0)

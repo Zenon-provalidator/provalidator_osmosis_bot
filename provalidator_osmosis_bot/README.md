@@ -7,7 +7,7 @@
 ### ex) /staking
 
 ## bot shows coin's information.
-⚛️ Osmosis (osmo)<br>
+🧪 Osmosis (osmo)<br>
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
 🥩Staking
