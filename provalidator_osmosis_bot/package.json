@@ -1,0 +1,30 @@
+{
+  "name": "provalidator_osmosis_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "provalidator_osmosis_bot.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "fs": "0.0.1-security",
+    "log4js": "^6.3.0",
+    "numeral": "^2.0.6",
+    "sync-fetch": "^0.3.0",
+    "telegraf": "^3.27.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "restart": "kill -9 `ps -ef | grep 'node provalidator_osmosis_bot.js' | grep -v grep | awk '{print $2}'` ; node provalidator_osmosis_bot.js >> ./provalidator_osmosis_bot.log 2>&1 &",
+    "start": "node provalidator_osmosis_bot.js >> ./provalidator_osmosis_bot.log 2>&1 &",
+    "stop": "kill -9 `ps -ef | grep 'node provalidator_osmosis_bot.js' | grep -v grep | awk '{print $2}'`"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zenon-provalidator/provalidator_osmosis_bot.git"
+  },
+  "author": "zenon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zenon-provalidator/provalidator_osmosis_bot/issues"
+  },
+  "homepage": "https://github.com/zenon-provalidator/provalidator_osmosis_bot#readme"
+}
