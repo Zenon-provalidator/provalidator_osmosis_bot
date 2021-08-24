@@ -32,12 +32,14 @@ function getMessage(coin){
 				stakedPercent = (stakedTokens / maxTokens * 100).toFixed(0)
 				notStakedTokens = maxTokens - stakedTokens
 				notStakedPercent = (notStakedTokens / maxTokens * 100).toFixed(0)
+				prvTokens = (getProvalidator() / 1000000).toFixed(0)
 				let wJson = {
 					"maxTokens" : maxTokens,
 					"stakedTokens" : stakedTokens,
 					"stakedPercent" : stakedPercent,
 					"notStakedTokens" : notStakedTokens,
 					"notStakedPercent" : notStakedPercent,
+					"prvTokens" : prvTokens,
 					"wdate" : new Date().getTime()
 				}
 				fs.writeFileSync(file, JSON.stringify(wJson))
@@ -47,10 +49,14 @@ function getMessage(coin){
 				stakedPercent = rJson.stakedPercent
 				notStakedTokens = rJson.notStakedTokens
 				notStakedPercent = rJson.notStakedPercent
+				prvTokens = rJson.prvTokens
 			}
 			msg += `🥩<b>Staking</b>\n\n`
-			msg += `🔐Staked : ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n🔓Unstaked : ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n⛓️Max Sply : ${numberWithCommas(maxTokens)} (100%)`
-			msg += `\n\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
+			msg += `🔐Staked : ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n`
+			msg += `🔓Unstaked : ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n`
+			msg += `⛓️Max Sply : ${numberWithCommas(maxTokens)} (100%)\n\n`
+			msg += `❤️Staked to <b>Provalidator</b>: ${numberWithCommas(prvTokens)}\n\n`
+			msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
 			msg += `Supported by <a href='https://provalidator.com' target='_blank'>Provalidator</a>\n`
 		}	
 
@@ -66,8 +72,13 @@ function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
+function getProvalidator(){
+	let json = fetch(process.env.OSMOSIS_API_URL+"/staking/validator/Provalidator").json()
+	return json.tokens
+}
+
 function getOsmosisInfo(){
-	let json = fetch(process.env.OSMOSIS_API_URL).json()
+	let json = fetch(process.env.OSMOSIS_API_URL+"/status").json()
 	let returnArr = { 
 		'bonded_tokens' : json.bonded_tokens,
 		'not_bonded_tokens' : json.not_bonded_tokens,
@@ -82,6 +93,8 @@ function getOsmosisInfo(){
 	}
 	return returnArr	
 }
+
+console.log(getMessage('osmosis'))
 
 module.exports = {
 	getMessage : getMessage
