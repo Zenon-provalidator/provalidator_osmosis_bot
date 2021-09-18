@@ -24,11 +24,11 @@ function getMessage(coin){
 		var cdate = parseInt(new Date().getTime())
 		
 		if(coin == 'osmosis'){
-			let cosmosInfo = getOsmosisInfo()
+			let osmosisInfo = getOsmosisInfo()
 			msg = `🧪 <b>Osmosis (OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 			if( wdate <  cdate) {
-				maxTokens = (cosmosInfo.max_tokens/ 1000000).toFixed(0)
-				stakedTokens = (cosmosInfo.bonded_tokens / 1000000 ).toFixed(0)
+				maxTokens = (osmosisInfo.max_tokens/ 1000000).toFixed(0)
+				stakedTokens = (osmosisInfo.bonded_tokens / 1000000 ).toFixed(0)
 				stakedPercent = (stakedTokens / maxTokens * 100).toFixed(0)
 				notStakedTokens = maxTokens - stakedTokens
 				notStakedPercent = (notStakedTokens / maxTokens * 100).toFixed(0)
