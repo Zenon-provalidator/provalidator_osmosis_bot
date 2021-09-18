@@ -32,14 +32,20 @@ function getMessage(coin){
 				stakedPercent = (stakedTokens / maxTokens * 100).toFixed(0)
 				notStakedTokens = maxTokens - stakedTokens
 				notStakedPercent = (notStakedTokens / maxTokens * 100).toFixed(0)
-				prvTokens = (getProvalidator() / 1000000).toFixed(0)
+				prvDetail = getProvalidatorDetail()//get provalidator detail info
+				prvRank = prvDetail.rank
+				prvRate = (prvDetail.rate * 100)
+				prvTokens = (prvDetail.tokens/ 1000000).toFixed(0)
+				
 				let wJson = {
 					"maxTokens" : maxTokens,
 					"stakedTokens" : stakedTokens,
 					"stakedPercent" : stakedPercent,
 					"notStakedTokens" : notStakedTokens,
 					"notStakedPercent" : notStakedPercent,
+					"prvRank" : prvRank,
 					"prvTokens" : prvTokens,
+					"prvRate" :  prvRate,
 					"wdate" : new Date().getTime()
 				}
 				fs.writeFileSync(file, JSON.stringify(wJson))
@@ -49,13 +55,17 @@ function getMessage(coin){
 				stakedPercent = rJson.stakedPercent
 				notStakedTokens = rJson.notStakedTokens
 				notStakedPercent = rJson.notStakedPercent
+				prvRank = rJson.prvRank
+				prvRate = rJson.prvRate
 				prvTokens = rJson.prvTokens
 			}
 			msg += `🥩<b>Staking</b>\n\n`
 			msg += `🔐Staked : ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n`
 			msg += `🔓Unstaked : ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n`
 			msg += `⛓️Max Sply : ${numberWithCommas(maxTokens)} (100%)\n\n`
-			msg += `❤️Staked to <b>Provalidator</b>: ${numberWithCommas(prvTokens)}\n\n`
+			msg += `<b>Stake OSMO with ❤️Provalidator</b>\n\n`
+			msg += `<b>🏆Validator Ranking: #${prvRank}</b>\n\n`
+			msg += `<b>🤝Staked: ${numberWithCommas(prvTokens)}</b>\n\n`
 			msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
 			msg += `Supported by <a href='https://provalidator.com' target='_blank'>Provalidator</a>\n`
 		}	
@@ -72,9 +82,17 @@ function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
-function getProvalidator(){
-	let json = fetch(process.env.OSMOSIS_API_URL+"/staking/validator/Provalidator").json()
-	return json.tokens
+function getProvalidatorDetail(){
+	let json = fetch(process.env.OSMOSIS_API_URL+"/staking/validators").json()
+	let obj = {};
+	for(var i in json){
+		if(process.env.PROVALIDATOR_OPERATER_ADDRESS === json[i].operator_address){			
+			obj.rank = json[i].rank
+			obj.rate = json[i].rate
+			obj.tokens = json[i].tokens
+		}
+	}
+	return obj	
 }
 
 function getOsmosisInfo(){
@@ -94,8 +112,7 @@ function getOsmosisInfo(){
 	return returnArr	
 }
 
-console.log(getMessage('osmosis'))
-
 module.exports = {
-	getMessage : getMessage
+	getMessage : getMessage,
+	getProvalidatorDetail : getProvalidatorDetail
 }
