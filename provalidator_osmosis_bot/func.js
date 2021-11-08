@@ -67,7 +67,7 @@ function getMessage(coin){
 				prvTokens = rJson.prvTokens
 			}
 			msg += `🥩<b>스테이킹</b>\n\n`
-			msg += `💰가격: $${priceUsd} (약 ${numberWithCommas(priceKrw)}원)\n\n`
+			msg += `💰<b>가격: $${priceUsd} (약 ${numberWithCommas(priceKrw)}원)</b>\n\n`
 			msg += `🔐본딩: ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n`
 			msg += `🔓언본딩: ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n`
 			msg += `⛓️최대 공급량: ${numberWithCommas(maxTokens)} (100%)\n\n`
@@ -76,7 +76,7 @@ function getMessage(coin){
 			msg += `<b>🔖수수료: ${prvRate}%</b>\n\n`
 			msg += `<b>🤝위임량: ${numberWithCommas(prvTokens)}</b>\n\n`
 			msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
-			msg += `프로밸리(<a href='https://provalidator.com' target='_blank'>Provalidator</a>) 검증인 만듦\n`
+			msg += `<b>프로밸리(<a href='https://provalidator.com' target='_blank'>Provalidator</a>) 검증인 만듦</b>\n`
 		}	
 
 		return msg
