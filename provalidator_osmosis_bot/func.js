@@ -27,6 +27,7 @@ function getMessage(coin){
 			let osmosisInfo = getOsmosisInfo()
 			msg = `🧪 <b>Osmosis (OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 			if( wdate <  cdate) {
+				price = getOsmosisPrice()
 				maxTokens = (osmosisInfo.max_tokens/ 1000000).toFixed(0)
 				stakedTokens = (osmosisInfo.bonded_tokens / 1000000 ).toFixed(0)
 				stakedPercent = (stakedTokens / maxTokens * 100).toFixed(0)
@@ -38,6 +39,7 @@ function getMessage(coin){
 				prvTokens = (prvDetail.tokens/ 1000000).toFixed(0)
 				
 				let wJson = {
+					"price" : price,
 					"maxTokens" : maxTokens,
 					"stakedTokens" : stakedTokens,
 					"stakedPercent" : stakedPercent,
@@ -50,6 +52,7 @@ function getMessage(coin){
 				}
 				fs.writeFileSync(file, JSON.stringify(wJson))
 			}else{
+				price = rJson.price
 				maxTokens = rJson.maxTokens
 				stakedTokens = rJson.stakedTokens
 				stakedPercent = rJson.stakedPercent
@@ -60,6 +63,7 @@ function getMessage(coin){
 				prvTokens = rJson.prvTokens
 			}
 			msg += `🥩<b>Staking</b>\n\n`
+			msg += `💰Price: $${price}\n\n`
 			msg += `🔐Staked : ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n`
 			msg += `🔓Unstaked : ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n`
 			msg += `⛓️Max Sply : ${numberWithCommas(maxTokens)} (100%)\n\n`
@@ -80,6 +84,11 @@ function getMessage(coin){
 
 function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
+function getOsmosisPrice(){
+	let json = fetch('https://api.coingecko.com/api/v3/simple/price?ids=osmosis&vs_currencies=usd').json()
+	return json.osmosis.usd
 }
 
 function getProvalidatorDetail(){
