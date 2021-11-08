@@ -27,7 +27,7 @@ function getMessage(coin){
 			let osmosisInfo = getOsmosisInfo()
 			msg = `🧪 <b>오스모시스 ($OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 			if( wdate <  cdate) {
-				price = getOsmosisPrice()
+				price = getPrice()
 				priceUsd = price[0].toFixed(2)
 				priceKrw = price[1].toFixed(0)
 				maxTokens = (osmosisInfo.max_tokens/ 1000000).toFixed(0)
@@ -91,7 +91,7 @@ function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
-function getOsmosisPrice(){
+function getPrice(){
 	let json = fetch('https://api.coingecko.com/api/v3/simple/price?ids=osmosis&vs_currencies=usd,krw').json()
 	return [json.osmosis.usd, json.osmosis.krw]
 }
