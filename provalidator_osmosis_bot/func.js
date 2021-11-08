@@ -25,10 +25,10 @@ function getMessage(coin){
 		
 		if(coin == 'osmosis'){
 			let osmosisInfo = getOsmosisInfo()
-			msg = `🧪 <b>오스모시스 (OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
+			msg = `🧪 <b>오스모시스 ($OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 			if( wdate <  cdate) {
 				price = getOsmosisPrice()
-				priceUsd = price[0]
+				priceUsd = price[0].toFixed(2)
 				priceKrw = price[1].toFixed(0)
 				maxTokens = (osmosisInfo.max_tokens/ 1000000).toFixed(0)
 				stakedTokens = (osmosisInfo.bonded_tokens / 1000000 ).toFixed(0)
