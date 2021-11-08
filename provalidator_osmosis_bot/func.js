@@ -25,9 +25,11 @@ function getMessage(coin){
 		
 		if(coin == 'osmosis'){
 			let osmosisInfo = getOsmosisInfo()
-			msg = `🧪 <b>Osmosis (OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
+			msg = `🧪 <b>오스모시스 (OSMO)</b>\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 			if( wdate <  cdate) {
 				price = getOsmosisPrice()
+				priceUsd = price[0]
+				priceKrw = price[1].toFixed(0)
 				maxTokens = (osmosisInfo.max_tokens/ 1000000).toFixed(0)
 				stakedTokens = (osmosisInfo.bonded_tokens / 1000000 ).toFixed(0)
 				stakedPercent = (stakedTokens / maxTokens * 100).toFixed(0)
@@ -39,7 +41,8 @@ function getMessage(coin){
 				prvTokens = (prvDetail.tokens/ 1000000).toFixed(0)
 				
 				let wJson = {
-					"price" : price,
+					"priceUsd" : priceUsd,
+					"priceKrw" : priceKrw,
 					"maxTokens" : maxTokens,
 					"stakedTokens" : stakedTokens,
 					"stakedPercent" : stakedPercent,
@@ -52,7 +55,8 @@ function getMessage(coin){
 				}
 				fs.writeFileSync(file, JSON.stringify(wJson))
 			}else{
-				price = rJson.price
+				priceUsd = rJson.priceUsd
+				priceKrw = rJson.priceKrw
 				maxTokens = rJson.maxTokens
 				stakedTokens = rJson.stakedTokens
 				stakedPercent = rJson.stakedPercent
@@ -62,16 +66,17 @@ function getMessage(coin){
 				prvRate = rJson.prvRate
 				prvTokens = rJson.prvTokens
 			}
-			msg += `🥩<b>Staking</b>\n\n`
-			msg += `💰Price: $${price}\n\n`
-			msg += `🔐Staked : ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n`
-			msg += `🔓Unstaked : ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n`
-			msg += `⛓️Max Sply : ${numberWithCommas(maxTokens)} (100%)\n\n`
-			msg += `<b>Stake OSMO with ❤️Provalidator</b>\n\n`
-			msg += `<b>🏆Validator Ranking: #${prvRank}</b>\n\n`
-			msg += `<b>🤝Staked: ${numberWithCommas(prvTokens)}</b>\n\n`
+			msg += `🥩<b>스테이킹</b>\n\n`
+			msg += `💰가격: $${priceUsd} (약 ${numberWithCommas(priceKrw)}원)\n\n`
+			msg += `🔐본딩: ${numberWithCommas(stakedTokens)} (${stakedPercent}%)\n\n`
+			msg += `🔓언본딩: ${numberWithCommas(notStakedTokens)} (${notStakedPercent}%)\n\n`
+			msg += `⛓️최대 공급량: ${numberWithCommas(maxTokens)} (100%)\n\n`
+			msg += `<b>프로밸리와 $OSMO 스테이킹 하세요❤️</b>\n\n`
+			msg += `<b>🏆검증인 순위: #${prvRank}</b>\n\n`
+			msg += `<b>🔖수수료: ${prvRate}%</b>\n\n`
+			msg += `<b>🤝위임량: ${numberWithCommas(prvTokens)}</b>\n\n`
 			msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
-			msg += `Supported by <a href='https://provalidator.com' target='_blank'>Provalidator</a>\n`
+			msg += `프로밸리(<a href='https://provalidator.com' target='_blank'>Provalidator</a>) 검증인 만듦\n`
 		}	
 
 		return msg
@@ -87,13 +92,13 @@ function numberWithCommas(x) {
 }
 
 function getOsmosisPrice(){
-	let json = fetch('https://api.coingecko.com/api/v3/simple/price?ids=osmosis&vs_currencies=usd').json()
-	return json.osmosis.usd
+	let json = fetch('https://api.coingecko.com/api/v3/simple/price?ids=osmosis&vs_currencies=usd,krw').json()
+	return [json.osmosis.usd, json.osmosis.krw]
 }
 
 function getProvalidatorDetail(){
 	let json = fetch(process.env.OSMOSIS_API_URL+"/staking/validators").json()
-	let obj = {};
+	let obj = {}
 	for(var i in json){
 		if(process.env.PROVALIDATOR_OPERATER_ADDRESS === json[i].operator_address){			
 			obj.rank = json[i].rank
