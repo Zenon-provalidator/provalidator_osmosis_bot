@@ -3,3 +3,4 @@
 /.env
 /json/
 /test.js
+/*.gz
