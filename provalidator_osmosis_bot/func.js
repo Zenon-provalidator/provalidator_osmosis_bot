@@ -87,6 +87,103 @@ function getMessage(coin){
 	}
 }
 
+function getProposal(num){
+	let title = ''
+	let jsonLocal = getProposalFromLocal(num)
+	//PROPOSAL_STATUS_DEPOSIT_PERIOD | PROPOSAL_STATUS_VOTING_PERIOD | PROPOSAL_STATUS_PASSED | PROPOSAL_STATUS_REJECTED
+	if(jsonLocal === 0 || jsonLocal === false){//not found json file from local
+		let jsonServer = getProposalFromServer(num) //get server data 
+		if(jsonServer === 203){//not found
+			return "Not found proposal #" + num
+		} else if(jsonServer === 500 || jsonServer === false){//internal error
+			return "Sorry! bot has error."
+		}else{
+			title = jsonServer.title
+		}
+	} else {
+		//proposal is not fixed
+		if(jsonLocal.status === "PROPOSAL_STATUS_PASSED" || jsonLocal.status === "PROPOSAL_STATUS_REJECTED"){
+			title = jsonLocal.title
+		} else{
+			let jsonServer = getProposalFromServer(num) //get server data
+			title = jsonServer.title
+		}
+	}
+	let prvDetail = getProvalidatorDetail()//get provalidator detail info
+	let prvRank = prvDetail.rank
+	let prvRate = (prvDetail.rate * 100)
+	let prvTokens = (prvDetail.tokens/ 1000000).toFixed(0)
+	let msg = `🧪 <b>오스모시스 ($OSMO)</b>\n`
+	msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
+	msg += `<b>🗳️프로포절</b>\n\n`
+	msg += `#${num} ${title}\n\n`
+	msg += `📌<a href='https://www.mintscan.io/osmosis/proposals/${num}'>https://www.mintscan.io/osmosis/proposals/${num}</a>\n\n`
+	msg += `🔍다른 프로포절 검색은 [/proposal 숫자]\n\n`
+//	msg += `<b>프로밸리와 $OSMO 스테이킹 하세요❤</b>\n\n`
+//	msg += `<b>🏆검증인 순위: #${prvRank}</b>\n\n`
+//	msg += `<b>🔖수수료: ${prvRate}%</b>\n\n`
+//	msg += `<b>🤝위임량: ${numberWithCommas(prvTokens)}</b>\n\n`
+	msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
+	msg += `<b>프로밸리(<a href='https://provalidator.com'>Provalidator</a>) 검증인 만듦</b>`
+	return msg
+}
+
+function getProposalFromServer(num){ //write Proposal json
+	let json = fetch(process.env.OSMOSIS_API_URL+"/gov/proposal/"+num).json()
+	let file = './json/proposals/' + num + '.json'
+	let wJson = {}
+	//logger.info(json)
+	
+	try{
+		if(typeof json.proposal_id !== "undefined"){
+			wJson = {
+				"id" : json.proposal_id, 
+				"title" : json.title, 
+				"desc" : json.description, 
+				"status" : json.proposal_status
+			}
+			fs.writeFileSync(file, JSON.stringify(wJson))
+			return wJson
+		} else{
+			//203 not found , 500 error
+			return json.error_code
+		}		
+	}catch(err){
+		logger.error(`=======================getProposalFromServer error=======================`)
+		logger.error(json)
+		return false
+	}
+}
+
+function getProposalFromLocal(num){//read Proposal json
+	let file = './json/proposals/' + num + '.json'
+	try{
+		if(fs.existsSync(file)){
+			return JSON.parse(fs.readFileSync(file))
+		} else {
+			return 0
+		}
+	} catch(err){
+		logger.error(`=======================getProposalFromJson error=======================`)
+		logger.error(json)
+		return false
+	}
+}
+
+function getLatestProposalNum(){
+	let latestProposal = 0
+	
+	try{
+		var files = fs.readdirSync('./json/proposals')
+		for(var i = 0; i < files.length; i++){
+			latestProposal = parseInt(files[i].replace(/\.[^/.]+$/, ""))
+		}
+		return latestProposal
+	} catch(err){
+		return 0
+	}
+}
+
 function numberWithCommas(x) {
 	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
@@ -128,5 +225,9 @@ function getOsmosisInfo(){
 
 module.exports = {
 	getMessage : getMessage,
-	getProvalidatorDetail : getProvalidatorDetail
+	getProvalidatorDetail : getProvalidatorDetail,
+	getProposal : getProposal,
+	getProposalFromServer : getProposalFromServer,
+	getProposalFromLocal : getProposalFromLocal,
+	getLatestProposalNum : getLatestProposalNum
 }
