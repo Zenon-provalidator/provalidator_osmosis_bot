@@ -175,9 +175,11 @@ function getLatestProposalNum(){
 	
 	try{
 		var files = fs.readdirSync('./json/proposals')
-		for(var i = 0; i < files.length; i++){
-			latestProposal = parseInt(files[i].replace(/\.[^/.]+$/, ""))
+		var fileArr = []
+		for(var i = 0; i < files.length; i++){			
+			fileArr.push(parseInt(files[i].replace(/\.[^/.]+$/, "")))
 		}
+		latestProposal = (Math.max(...fileArr))
 		return latestProposal
 	} catch(err){
 		return 0
