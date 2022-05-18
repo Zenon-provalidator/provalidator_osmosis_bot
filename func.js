@@ -165,7 +165,7 @@ function getProposalFromLocal(num){//read Proposal json
 		}
 	} catch(err){
 		logger.error(`=======================getProposalFromJson error=======================`)
-		logger.error(json)
+//		logger.error(json)
 		return false
 	}
 }
