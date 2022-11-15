@@ -82,7 +82,7 @@ const botJob = new CronJob(`*/60 * * * * *`, async function () {
 		let callProposalNum = latestProposal+1
 		let getProposal = func.getProposalFromServer(callProposalNum)
 		
-		if(typeof getProposal === "object"){
+//		if(typeof getProposal === "object"){
 //			let msg = `🧪 <b>오스모시스 ($OSMO)</b>\n`
 //			msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n\n`
 //			msg += `<b>🗳️새로운 프로포절이 올라왔습니다.</b>\n\n`
@@ -92,11 +92,11 @@ const botJob = new CronJob(`*/60 * * * * *`, async function () {
 //			msg += `ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n`
 //			msg += `<b>프로밸리(<a href='https://provalidator.com'>Provalidator</a>) 검증인 만듦</b>`				
 //			bot.telegram.sendMessage(process.env.PROPOSAL_ALERT_ROOM_ID, msg,{ parse_mode: 'HTML', disable_web_page_preview : true})
-		} else if(getProposal === 203){
-			logger.debug(`${callProposalNum} proposal is not found`)
-		} else{
-			logger.error(`server error`)
-		}
+//		} else if(getProposal === 203){
+//			logger.debug(`${callProposalNum} proposal is not found`)
+//		} else{
+//			logger.error(`server error`)
+//		}
 	}else{
 		logger.error(`latestProposal is 0`)
 	}
